@@ -43,6 +43,9 @@ const middleware=(req,res,next)=>{
     console.log("this is middleware");
     next();
 }
+app.get("/",middleware,(req,res)=>{
+    res.send("Express Working")
+})
 
 app.listen(5000, () => {
     console.log("server running...");
