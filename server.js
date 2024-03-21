@@ -26,10 +26,6 @@ app.use(require('./router/mtrackerRoute'))
 app.use(require('./router/newsRoute'))
 app.use(require('./router/nightstoryRoute'))
 
-app.get("/",(req,res)=>{
-  console.log("express is working")
-})
-
 // Error handling middleware
 app.use((error, req, res, next) => {
   console.error(error);
