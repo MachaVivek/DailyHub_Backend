@@ -5,8 +5,9 @@ const expenseModel = require("../models/moneytracker/expensemodel");
 
 router.post('/postincome', async (req, res) => {
     try {
-      const { amount, option, borrowerName, borrowerPhone, date } = req.body;
+      const { amount, option, borrowerName, borrowerPhone, date,userId } = req.body;
       const newForm = new incomeModel({
+        userId,
         amount,
         option,
         borrowerName,
@@ -23,27 +24,27 @@ router.post('/postincome', async (req, res) => {
 
 
 router.post('/postexpense', async (req, res) => {
-    try {
-      const { amount, subject, option, date } = req.body;
-      const newExpense = new expenseModel({
-        amount,
-        subject,
-        option,
-        date
-      });
-      const savedExpense = await newExpense.save();
-  
-      res.status(201).json(savedExpense);
-    } catch (error) {
-      console.error('Error submitting expense:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
+  try {
+    const { amount, subject, option, date, userId } = req.body;
+    const newExpense = new expenseModel({
+      userId,
+      amount,
+      subject,
+      option,
+      date
+    });
+    const savedExpense = await newExpense.save();
+    res.status(201).json(savedExpense);
+  } catch (error) {
+    console.error('Error submitting expense:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // GET route to fetch all income forms
-router.get('/getincomeforms', async (req, res) => {
+router.get('/getincomeforms/:userId', async (req, res) => {
   try {
-      const allIncomeForms = await incomeModel.find();
+      const allIncomeForms = await incomeModel.find({ userId: req.params.userId });
       res.status(200).json(allIncomeForms);
   } catch (error) {
       console.error('Error fetching income forms:', error);
@@ -52,9 +53,9 @@ router.get('/getincomeforms', async (req, res) => {
 });
 
 // GET route to fetch all expense forms
-router.get('/getexpenseforms', async (req, res) => {
+router.get('/getexpenseforms/:userId', async (req, res) => {
   try {
-      const allExpenseForms = await expenseModel.find();
+      const allExpenseForms = await expenseModel.find({ userId: req.params.userId } );
       res.status(200).json(allExpenseForms);
   } catch (error) {
       console.error('Error fetching expense forms:', error);
